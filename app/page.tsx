@@ -1,8 +1,20 @@
-import React from 'react';
+"use client";
+
+import React, { useState } from 'react';
 import ContactList from '../components/ContactList';
 import Header from "../components/Header";
+import AddContactModal from "../components/AddContactModal";
 
 export default function Home() {
+  const [contacts, setContacts] = useState([]);
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+
+
+  const handleAddContact = (newContact: Contact) => {
+    setContacts([...contacts, newContact]);
+    setIsAddModalOpen(false);
+
+  };
   return (
     <div className="min-h-screen bg-[#141414] relative">
       {/* Background element with borders */}
@@ -17,14 +29,20 @@ export default function Home() {
       {/* Main content */}
       <main className="pt-20 flex flex-col items-center">
         <div className="w-full max-w-[720px]">
-          <Header />
+          <Header onOpenAddModal={() => setIsAddModalOpen(true)} />
         </div>
         {/* Full-width border */}
         <div className="w-full h-px bg-gray-700"></div>
         <div className="w-full max-w-[720px]">
-          <ContactList />
+          <ContactList contacts={contacts} />
         </div>
       </main>
+
+      <AddContactModal
+        isOpen={isAddModalOpen}
+        onClose={() => setIsAddModalOpen(false)}
+        onAdd={handleAddContact}
+      />
     </div>
   );
 }
