@@ -23,11 +23,21 @@ const Header = () => {
             <div className="w-8 h-8 bg-gray-300 rounded-full"></div>
 
             <button
-              className="p-2 flex items-center justify-center text-white rounded-full w-[120px] h-[40px] text-sm leading-[14px] font-lexend-deca font-[400]"
+              className="relative p-2 flex items-center justify-center text-white rounded-full w-[120px] h-[40px] text-sm leading-[14px] font-lexend-deca font-[400]"
               style={{
-                background: "linear-gradient(to bottom, #282828 70%, #282828 100%)"
+                backgroundColor: "#282828",
               }}
             >
+              <span
+                className="absolute inset-0 rounded-full"
+                style={{
+                  padding: "2px",
+                  background: "linear-gradient(180deg, #3C3C3C 0%, rgba(60, 60, 60, 0) 100%)",
+                  WebkitMask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
+                  maskComposite: "exclude",
+                  borderRadius: "inherit"
+                }}
+              ></span>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="13.5"
@@ -45,6 +55,9 @@ const Header = () => {
               </svg>
               Add New
             </button>
+
+
+
 
           </div>
         </header>

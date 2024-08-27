@@ -11,7 +11,7 @@ const dummyContacts = [
 
 const ContactList = () => {
   return (
-    <div className="w-full md:w-[720px] mx-auto justify-items-start">¨
+    <div className="w-full md:w-[720px] mx-auto justify-items-start">
       <div className="grid grid-cols-5">
         <div className="col-span-5 md:col-span-3">
           <ul>
