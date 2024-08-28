@@ -9,7 +9,7 @@ export default function Home() {
   const [contacts, setContacts] = useState([]);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   
-  const handleAddContact = (newContact: Contact) => {
+  const handleAddContact = (newContact: any) => {
     setContacts([...contacts, newContact]);
     setIsAddModalOpen(false);
   };
