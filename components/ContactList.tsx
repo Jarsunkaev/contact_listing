@@ -2,11 +2,11 @@ import React from 'react';
 import Image from 'next/image';
 
 const dummyContacts = [
-  { id: 1, name: 'Timothy Lewis', phone: '(254) 555-0123', image: '/api/placeholder/40/40' },
-  { id: 2, name: 'Sarah Wright', phone: '(555) 123-4567', image: '/api/placeholder/40/40' },
-  { id: 3, name: 'Lucy Jones', phone: '(555) 987-6543', image: '/api/placeholder/40/40' },
-  { id: 4, name: 'John Perez', phone: '(555) 246-8102', image: '/api/placeholder/40/40' },
-  { id: 5, name: 'Anthony Rodriguez', phone: '(555) 369-2580', image: '/api/placeholder/40/40' },
+  { id: 1, name: 'Timothy Lewis', phone: '(254) 555-0123', image: null },
+  { id: 2, name: 'Sarah Wright', phone: '(555) 123-4567', image: null },
+  { id: 3, name: 'Lucy Jones', phone: '(555) 987-6543', image: null },
+  { id: 4, name: 'John Perez', phone: '(555) 246-8102', image: null },
+  { id: 5, name: 'Anthony Rodriguez', phone: '(555) 369-2580', image: null },
 ];
 
 const ContactList = () => {
@@ -18,9 +18,9 @@ const ContactList = () => {
             {dummyContacts.map((contact) => (
               <li key={contact.id} className="py-4 px-4 flex justify-items-start space-x-4">
                 <Image 
-                  src={contact.image} 
+                  src={contact.image || "/profile.png"}
                   alt={`${contact.name}'s profile`} 
-                  className="w-10 h-10 rounded-full"
+                  className="w-10 h-10 rounded-full object-cover"
                   width={40}
                   height={40}
                 />

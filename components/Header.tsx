@@ -46,7 +46,9 @@ const Header = ({ onAddContact }: { onAddContact: (newContact: any) => void }) =
                   background: "linear-gradient(180deg, #3C3C3C 0%, rgba(60, 60, 60, 0) 100%)",
                   WebkitMask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
                   maskComposite: "exclude",
-                  borderRadius: "inherit"
+                  borderRadius: "inherit",
+                  border: "1px"
+
                 }}
               ></span>
               <svg
