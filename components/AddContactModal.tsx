@@ -137,7 +137,7 @@ const AddContactModal = ({ isOpen, onClose, onAdd }: { isOpen: boolean; onClose:
           <button
             type="submit"
             form="contact-form"
-            className="px-4 py-2 bg-white text-black rounded-md hover:bg-gray-200 transition-colors"
+            className="px-4 py-2 bg-[#262626] text-white rounded-md hover:bg-[#2D2D2D] transition-colors"
           >
             Done
           </button>
