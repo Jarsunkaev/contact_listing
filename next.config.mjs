@@ -1,4 +1,13 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {};
-
-export default nextConfig;
+export function webpack(config, { isServer }) {
+    if (!isServer) {
+        config.resolve.fallback = {
+            ...config.resolve.fallback,
+            fs: false,
+            path: false,
+        };
+    }
+    return config;
+}
+export const experimental = {
+    serverComponentsExternalPackages: ['sequelize', 'sqlite3'],
+};

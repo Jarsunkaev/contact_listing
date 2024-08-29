@@ -1,7 +1,24 @@
-const { DataTypes } = require('sequelize');
-const sequelize = require('../config/database');
+// models/Contact.ts
 
-const Contact = sequelize.define('Contact', {
+import { DataTypes, Model, InferAttributes, InferCreationAttributes, CreationOptional } from 'sequelize';
+import sequelize from '../config/database';
+
+interface ContactModel extends Model<InferAttributes<ContactModel>, InferCreationAttributes<ContactModel>> {
+  id: CreationOptional<number>;
+  name: string;
+  phone: string;
+  email: string;
+  image: string | null;
+  createdAt: CreationOptional<Date>;
+  updatedAt: CreationOptional<Date>;
+}
+
+const Contact = sequelize.define<ContactModel>('Contact', {
+  id: {
+    type: DataTypes.INTEGER,
+    autoIncrement: true,
+    primaryKey: true
+  },
   name: {
     type: DataTypes.STRING,
     allowNull: false
@@ -17,7 +34,10 @@ const Contact = sequelize.define('Contact', {
   image: {
     type: DataTypes.STRING,
     allowNull: true
-  }
+  },
+  createdAt: DataTypes.DATE,
+  updatedAt: DataTypes.DATE
 });
 
-module.exports = Contact;
+export { Contact };
+export type { ContactModel };

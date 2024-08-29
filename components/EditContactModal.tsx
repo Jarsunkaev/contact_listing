@@ -1,24 +1,62 @@
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
+import { ContactModel } from '../models/Contacts';
 
-const EditContactModal = ({ isOpen, onClose, onEdit, contact }: { isOpen: boolean; onClose: () => void; onEdit: (contact: { id: number; name: string; phone: string; email: string; image?: File }) => void; contact: { id: number; name: string; phone: string; email: string; image?: string } }) => {
+interface EditContactModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onEdit: (contact: ContactModel) => void;
+  contact: ContactModel;
+}
+
+const EditContactModal: React.FC<EditContactModalProps> = ({ isOpen, onClose, onEdit, contact }) => {
   const [name, setName] = useState(contact.name);
   const [phone, setPhone] = useState(contact.phone);
   const [email, setEmail] = useState(contact.email);
   const [image, setImage] = useState<File | null>(null);
-  const [previewUrl, setPreviewUrl] = useState<string | null>(contact.image || null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(contact.image);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     setName(contact.name);
     setPhone(contact.phone);
-    setEmail(contact.email);
-    setPreviewUrl(contact.image || null);
+    setEmail(contact.email || '');
+    setPreviewUrl(contact.image);
   }, [contact]);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    onEdit({ id: contact.id, name, phone, email, ...(image && { image }) });
-    onClose();
+    setIsLoading(true);
+    setError(null);
+
+    const formData = new FormData();
+    formData.append('name', name);
+    formData.append('phone', phone);
+    formData.append('email', email);
+    if (image) {
+      formData.append('image', image);
+    }
+
+    try {
+      const response = await fetch(`/api/contacts/${contact.id}`, {
+        method: 'PUT',
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update contact');
+      }
+
+      const updatedContact: ContactModel = await response.json();
+      onEdit(updatedContact);
+      onClose();
+    } catch (error) {
+      console.error('Error updating contact:', error);
+      setError('Failed to update contact. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -34,20 +72,13 @@ const EditContactModal = ({ isOpen, onClose, onEdit, contact }: { isOpen: boolea
     setPreviewUrl(null);
   };
 
-  const getInputStyle = (value: string) => `
-    w-[316px] text-white p-2 rounded-md 
-    focus:outline-none focus:ring-1 focus:ring-[#4a4a4a] 
-    placeholder-gray-500
-    transition-colors duration-200
-    ${value ? 'bg-[#414141] border border-[#4a4a4a]' : 'bg-[#282828] border border-transparent'}
-  `;
-
   if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
       <div className="bg-[#1C1C1C] text-white rounded-lg w-[380px] h-[560px] p-6 flex flex-col">
         <h2 className="text-[32px] font-glysa mb-6">Edit contact</h2>
+        {error && <p className="text-red-500 mb-4">{error}</p>}
         <form onSubmit={handleSubmit} className="space-y-6 flex-grow overflow-y-auto w-full flex flex-col p-1">
           <div className="flex items-center space-x-4 mb-2">
             <div className="w-[88px] h-[88px] bg-gray-600 rounded-full overflow-hidden flex-shrink-0 relative">
@@ -107,7 +138,8 @@ const EditContactModal = ({ isOpen, onClose, onEdit, contact }: { isOpen: boolea
               placeholder="Jamie Wright"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className={getInputStyle(name)}
+              className="w-[316px] text-white p-2 rounded-md focus:outline-none focus:ring-1 focus:ring-[#4a4a4a] placeholder-gray-500 transition-colors duration-200 bg-[#282828] border border-transparent"
+              required
             />
           </div>
           <div className="w-full flex flex-col">
@@ -118,7 +150,8 @@ const EditContactModal = ({ isOpen, onClose, onEdit, contact }: { isOpen: boolea
               placeholder="+01 234 5678"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
-              className={getInputStyle(phone)}
+              className="w-[316px] text-white p-2 rounded-md focus:outline-none focus:ring-1 focus:ring-[#4a4a4a] placeholder-gray-500 transition-colors duration-200 bg-[#282828] border border-transparent"
+              required
             />
           </div>
           <div className="w-full flex flex-col">
@@ -129,7 +162,7 @@ const EditContactModal = ({ isOpen, onClose, onEdit, contact }: { isOpen: boolea
               placeholder="jamie.wright@mail.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className={getInputStyle(email)}
+              className="w-[316px] text-white p-2 rounded-md focus:outline-none focus:ring-1 focus:ring-[#4a4a4a] placeholder-gray-500 transition-colors duration-200 bg-[#282828] border border-transparent"
             />
           </div>
         </form>
@@ -138,15 +171,16 @@ const EditContactModal = ({ isOpen, onClose, onEdit, contact }: { isOpen: boolea
             type="button"
             onClick={onClose}
             className="px-4 py-2 bg-transparent text-white hover:bg-[#282828] rounded-md transition-colors"
+            disabled={isLoading}
           >
             Cancel
-          </button>
-          <button
-            type="submit"
-            form="contact-form"
-            className="px-4 py-2 bg-[#262626] text-white rounded-md hover:bg-[#2D2D2D] transition-colors"
+          </button><button
+            type="button"
+            onClick={onClose}
+            className="px-4 py-2 bg-transparent text-white hover:bg-[#282828] rounded-md transition-colors"
+            disabled={isLoading}
           >
-            Save
+            {isLoading ? 'Saving...' : 'Save'}
           </button>
         </div>
       </div>
