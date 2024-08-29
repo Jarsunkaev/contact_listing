@@ -5,7 +5,6 @@ import { Contact } from '../../../models/Contacts';
 import sequelize from '../../../config/database';
 import { IncomingForm } from 'formidable';
 
-// Disable body parsing, as formidable will handle it
 export const config = {
   api: {
     bodyParser: false,
@@ -37,12 +36,12 @@ export async function POST(req: Request) {
           const filename = `${Date.now()}-${imageFile.originalFilename}`;
           const filepath = path.join(process.cwd(), 'public', 'uploads', filename);
 
-          // Move the file from temp path to final destination
+
           await fs.promises.rename(tempPath, filepath);
           imagePath = `/uploads/${filename}`;
         }
 
-        // Create a new contact in the database
+        
         const contact = await Contact.create({
           name: name[0] as string,
           phone: phone[0] as string,
