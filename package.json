@@ -13,7 +13,9 @@
   "dependencies": {
     "better-sqlite3": "^11.2.1",
     "formidable": "^3.5.1",
+    "multiparty": "^4.2.3",
     "next": "14.2.6",
+    "next-connect": "^1.0.0",
     "react": "^18",
     "react-dom": "^18",
     "sequelize": "^6.37.3",
@@ -22,6 +24,7 @@
   "devDependencies": {
     "@types/better-sqlite3": "^7.6.11",
     "@types/formidable": "^3.4.5",
+    "@types/multiparty": "^0.0.36",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
